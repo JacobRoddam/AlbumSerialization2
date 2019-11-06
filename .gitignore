@@ -1,11 +1,20 @@
-*.class
-.idea/
-*.jar
+
+
+# gradle
 .gradle/
+build/
+
+# IntelliJ
+.idea/
+out/
+*.iml
+
+# OS
+.DS_Store
+
+#Class files
+*.class
+
+#Text and serialization files
 *.csv
 *.ser
-*.gradle
-build
-gradlew
-gradlew.bat
-gradle/

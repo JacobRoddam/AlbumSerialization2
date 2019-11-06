@@ -1,15 +1,19 @@
-package AlbumClasses;
+package album;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 
-public class Album implements Serializable{
+public class Album implements Serializable, Comparable<Album>{
 
-    protected String name;
-    protected String artist;
-    protected String genre;
-    protected int numSongs;
+    private String name;
+    private String artist;
+    private String genre;
+    private int numSongs;
+
+    public Album(){
+        this("", "", "", 0);
+    }
 
     public Album(String name, String artist, String genre, int numSongs) {
         this.name = name;
@@ -60,16 +64,22 @@ public class Album implements Serializable{
      */
     @Override
     public boolean equals(Object obj) {
-        boolean isEqual = false;
+        boolean isEqual = true;
         if ((obj instanceof Album)){
             Album alb = (Album) obj;
-            isEqual = name.equals(alb.name) && artist.equals(alb.artist) && genre.equals(alb.genre) && numSongs == alb.numSongs;
+            isEqual = isEqual && (name.compareTo(alb.getName()) == 0);
+            isEqual = isEqual && (artist.compareTo(alb.getArtist()) == 0);
+            isEqual = isEqual && (genre.compareTo(alb.getGenre()) == 0);
+            isEqual = isEqual && (numSongs == alb.numSongs);
         }
+        else { isEqual = false; }
+
 
         return isEqual;
     }
 
     //Compares two Albums based on number of songs.
+    @Override
     public int compareTo(Album alb){
 
         return Integer.compare(numSongs, alb.numSongs);
@@ -94,17 +104,17 @@ public class Album implements Serializable{
     // Serialization
 
     //Returns a comma separated string with the values of all the attributes of the album
-    public String getCSVString(){
+    String getCSVString(){
         StringBuilder csvString = new StringBuilder();
         char spl = ',';
 
-        csvString.append(getName());
+        csvString.append(this.name);
         csvString.append(spl);
-        csvString.append(getArtist());
+        csvString.append(this.artist);
         csvString.append(spl);
-        csvString.append(getGenre());
+        csvString.append(this.genre);
         csvString.append(spl);
-        csvString.append(getNumSongs());
+        csvString.append(this.numSongs);
 
 
 
@@ -113,21 +123,17 @@ public class Album implements Serializable{
     }
 
     //Writes a comma separated string with the values of all the attributes of the Album to a file.
-    public static void serializeToCSV(Album a, String CSVFileName) throws IOException{
-        String csv = a.getCSVString();
+    public static void serializeToCSV(Album album, String CSVFileName) throws IOException{
+        String csv = album.getCSVString();
 
         OutputStream outS = new FileOutputStream(CSVFileName);
-        OutputStreamWriter wr = new OutputStreamWriter(outS, StandardCharsets.UTF_8);
-        BufferedWriter writer = new BufferedWriter(wr);
+        OutputStreamWriter outSWRiter = new OutputStreamWriter(outS, StandardCharsets.UTF_8);
+        BufferedWriter bWriter = new BufferedWriter(outSWRiter);
 
 
-        //BufferedWriter writer = new BufferedWriter(new FileWriter(CSVFileName));
-        writer.write(csv);
+        bWriter.write(csv);
 
-        writer.close();
-
-        //System.out.println("Writing to CSV file: " + CSVFileName + " for album: " + a.getName() + " successful");
-
+        bWriter.close();
     }
 
 
@@ -135,28 +141,26 @@ public class Album implements Serializable{
      * Takes a file containing the csv string for an Album instance
      * and returns an Album instance with the same attributes of the serialized instance.
      */
-    public static Album deserializeToCSV(String CSVFileName) throws IOException{
+    public static Album deserializeFromCSV(String CSVFileName) throws IOException{
         Album album = null;
         String line;
-        BufferedReader br = null;
-        InputStream in = new FileInputStream(CSVFileName);
-        InputStreamReader inR = new InputStreamReader(in, StandardCharsets.UTF_8);
+        BufferedReader bReader = null;
+        InputStream inStream = new FileInputStream(CSVFileName);
+        InputStreamReader inReader = new InputStreamReader(inStream, StandardCharsets.UTF_8);
 
 
-            //System.out.println("Try entered");
-        br = new BufferedReader(inR);
-        line = br.readLine();
-            //System.out.println(line);
+
+        bReader = new BufferedReader(inReader);
+        line = bReader.readLine();
         if (line != null){
-                //System.out.println("If entered");
             String[] memberArray = line.trim().split(",");
             int numOfSongs = Integer.parseInt(memberArray[memberArray.length - 1]);
-            album = new AlbumClasses.Album(memberArray[0], memberArray[1], memberArray[2], numOfSongs);
+            album = new album.Album(memberArray[0], memberArray[1], memberArray[2], numOfSongs);
 
         }
 
 
-        br.close();
+        bReader.close();
 
 
         return album;
@@ -165,11 +169,11 @@ public class Album implements Serializable{
 
     // Binary Serialization and Deserialization
 
-    public static void serializeToBinary(Album a, String fileName) throws IOException{
+    public static void serializeToBinary(Album album, String fileName) throws IOException{
         FileOutputStream file = new FileOutputStream(fileName);
         ObjectOutputStream outS = new ObjectOutputStream(file);
 
-        outS.writeObject(a);
+        outS.writeObject(album);
 
         outS.close();
         file.close();
@@ -181,12 +185,12 @@ public class Album implements Serializable{
         FileInputStream file = new FileInputStream(fileName);
         ObjectInputStream inS = new ObjectInputStream(file);
 
-        Album a = (Album)inS.readObject();
+        Album album = (Album)inS.readObject();
 
         inS.close();
         file.close();
 
-        return a;
+        return album;
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException{

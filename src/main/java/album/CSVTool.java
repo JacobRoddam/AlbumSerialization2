@@ -1,4 +1,4 @@
-package AlbumClasses;
+package album;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +38,10 @@ public class CSVTool {
         Album alb;
         while (line != null){
                 //System.out.println("If entered");
-            String[] memberArray = line.trim().split(",");
+            String[] memberArray = line.split(",");
+            for (int j = 0; j < memberArray.length; j++){
+                memberArray[j] = memberArray[j].trim();
+            }
             int numOfSongs = Integer.parseInt(memberArray[memberArray.length - 1]);
             alb = new Album(memberArray[0], memberArray[1], memberArray[2], numOfSongs);
             albums.add(alb);

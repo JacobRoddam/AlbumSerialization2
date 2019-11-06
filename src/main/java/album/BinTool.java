@@ -1,35 +1,25 @@
-package AlbumClasses;
+package album;
 
 import java.io.*;
-import java.util.ArrayList;
 
 
 public class BinTool implements Serializable {
 
-    public static void serializeToBinary(Album[] Albums, String fileName) throws IOException {
+    public static void serializeToBinary(AlbumList albums, String fileName) throws IOException{
         FileOutputStream file = new FileOutputStream(fileName);
         ObjectOutputStream outS = new ObjectOutputStream(file);
 
-        for (int i = 0; i < Albums.length; i++){         // new line?
-            outS.writeObject(Albums[i]);
+        outS.writeObject(albums);
 
-
-        }
         outS.close();
         file.close();
     }
 
-    public static ArrayList<Album> deserializeFromBinary(String fileName) throws IOException, ClassNotFoundException {
+    public static AlbumList deserializeFromBinary(String fileName) throws IOException, ClassNotFoundException {
         FileInputStream file = new FileInputStream(fileName);
         ObjectInputStream inS = new ObjectInputStream(file);
-        ArrayList<Album> albums = new ArrayList<>();
-        Album a;
 
-        a = (Album)inS.readObject();
-        while (a != null){                   // new line?
-            albums.add(a);
-            a = (Album)inS.readObject();
-        }
+        AlbumList albums = (AlbumList)inS.readObject();
 
         inS.close();
         file.close();
@@ -37,16 +27,23 @@ public class BinTool implements Serializable {
         return albums;
     }
 
+
+
+
+
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Album alb1 = new Album("Good Kid Maad City", "Kendrick Lamar", "Rap", 13);
         Album alb2 = new Album("Shmilco", "Wilco", "Indie", 12);
 
-        Album[] albums = {alb1, alb2};
+        Album[] albumArray = {alb1, alb2};
+        AlbumList albums = new AlbumList(albumArray);
         serializeToBinary(albums, "serial.ser");
-        ArrayList<Album> albList = deserializeFromBinary("serial.ser");
+        AlbumList albumsCopy = deserializeFromBinary("serial.ser");
 
-        Album alb1a = albList.get(0);
-        Album alb2a = albList.get(1);
+        Album[] albList = albumsCopy.getAlbumList();
+
+        Album alb1a = albList[0];
+        Album alb2a = albList[1];
 
         System.out.println("alb1 = alb1a: " + alb1.equals(alb1a));
         System.out.println("alb2 = alb2a: " + alb2.equals(alb2a));

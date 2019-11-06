@@ -1,4 +1,4 @@
-package AlbumClasses;
+package album;
 
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class TestDriver {
         Album.serializeToCSV(alb1, file1);
 
         System.out.println("Deserialize alb1 from file into Album alb1a");
-        Album alb1a = Album.deserializeToCSV(file1);
+        Album alb1a = Album.deserializeFromCSV(file1);
 
         if (alb1.equals(alb1a)){ System.out.println("alb1 equals alb1a, deserialization successful");}
         else {System.out.println("alb1 does not equal alb1a, deserialization unsuccessful");}
@@ -38,7 +38,7 @@ public class TestDriver {
 
         System.out.println("Serialize alb2 to file alb2.csv and deserialize from file into Album alb2a");
         Album.serializeToCSV(alb2, file2);
-        Album alb2a = Album.deserializeToCSV(file2);
+        Album alb2a = Album.deserializeFromCSV(file2);
 
         if (alb2.equals(alb2a)){ System.out.println("alb2 equals alb2a, deserialization successful");}
         else {System.out.println("alb2 does not equal alb2a, deserialization unsuccessful");}
