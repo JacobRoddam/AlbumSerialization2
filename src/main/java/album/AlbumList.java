@@ -22,4 +22,8 @@ public class AlbumList implements Serializable {
     public Album[] getAlbumList(){
         return albumList;
     }
+
+    public Album getAlbum(int i) {return getAlbumList()[i];}
+
+
 }

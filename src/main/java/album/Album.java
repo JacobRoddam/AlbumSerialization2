@@ -1,5 +1,7 @@
 package album;
 
+import com.thoughtworks.xstream.XStream; // XStream Library
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -193,6 +195,25 @@ public class Album implements Serializable, Comparable<Album>{
         return album;
     }
 
+    public static void serializeToXML(Album album, String fileName) throws IOException {
+        XStream xstream = new XStream();
+        xstream.alias("album", Album.class);
+        OutputStream outS = new FileOutputStream(fileName);
+
+        xstream.toXML(album, outS);
+
+    }
+
+    public static Album deserializeFromXML(String fileName) throws IOException {
+        XStream xstream = new XStream();
+        xstream.alias("album", Album.class);
+        InputStream inS = new FileInputStream(fileName);
+
+        Album album = (Album) xstream.fromXML(inS);
+
+        return album;
+    }
+
     public static void main(String[] args) throws IOException, ClassNotFoundException{
         String fileName = "serialize.ser";
 
@@ -201,6 +222,8 @@ public class Album implements Serializable, Comparable<Album>{
         Album aDes = deserializeFromBinary(fileName);
 
         System.out.println("a = aDes: " + a.equals(aDes));
+
+        serializeToXML(a, "xmltester1.xml");
     }
 
 

@@ -18,3 +18,4 @@ out/
 #Text and serialization files
 *.csv
 *.ser
+*.xml

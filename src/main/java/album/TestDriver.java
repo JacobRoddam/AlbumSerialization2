@@ -69,7 +69,7 @@ public class TestDriver {
         Album[] albums = {alb1, alb2};
         System.out.println("Serialize, then deserialize into ArrayList w/ alb1 going into alb1b and alb2 going into alb2b");
         CSVTool.serializeToCSV(albums, "albums.csv");
-        ArrayList<Album> desAlbs = CSVTool.deserializeToCSV("albums.csv");
+        ArrayList<Album> desAlbs = CSVTool.deserializeFromCSV("albums.csv");
         Album alb1b = desAlbs.get(0);
         Album alb2b = desAlbs.get(1);
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class CSVTool {
 
     public static void serializeToCSV(Album[] albums, String CSVFileName) throws IOException{
-        //BufferedWriter writer = new BufferedWriter(new FileWriter(CSVFileName));
+
         OutputStream outS = new FileOutputStream(CSVFileName);
         OutputStreamWriter wr = new OutputStreamWriter(outS, StandardCharsets.UTF_8);
         BufferedWriter writer = new BufferedWriter(wr);
@@ -22,22 +22,16 @@ public class CSVTool {
 
     }
 
-    public static ArrayList<Album> deserializeToCSV(String CSVFileName) throws IOException{
-        BufferedReader br = null;
-        String line;
+    public static ArrayList<Album> deserializeFromCSV(String CSVFileName) throws IOException{
         ArrayList<Album> albums = new ArrayList<>();
+
         InputStream in = new FileInputStream(CSVFileName);
         InputStreamReader inR = new InputStreamReader(in, StandardCharsets.UTF_8);
+        BufferedReader br = new BufferedReader(inR);
 
-
-        //System.out.println("Try entered");
-        br = new BufferedReader(inR);
-        line = br.readLine();
-            //System.out.println(line);
-        int i = 0;
+        String line = br.readLine();
         Album alb;
         while (line != null){
-                //System.out.println("If entered");
             String[] memberArray = line.split(",");
             for (int j = 0; j < memberArray.length; j++){
                 memberArray[j] = memberArray[j].trim();
@@ -48,13 +42,9 @@ public class CSVTool {
             line = br.readLine();
         }
 
-
-
         br.close();
 
-
         return albums;
-
     }
 
 
